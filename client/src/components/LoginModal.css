@@ -1,0 +1,55 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 400px;
+    padding: 40px;
+    position: relative;
+    text-align: center;
+}
+
+.modal-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: white;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+}
+
+.error-text {
+    color: var(--danger);
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.hint-text {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
