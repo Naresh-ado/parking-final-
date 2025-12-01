@@ -64,7 +64,7 @@ class VehicleGateSystem:
                 match_percentage = len(good_matches) / total_features
                 
                 # Debug print to help user see what's happening
-                if match_percentage > 0.01:
+                if match_percentage > 0.03:
                     print(f"Checking... Match Score: {match_percentage:.1%} ({vehicle_type})")
                 
                 if match_percentage > max_score:
@@ -73,7 +73,7 @@ class VehicleGateSystem:
                     
 
         # Threshold for detection (30% as requested)
-        if max_score > 0.03:
+        if max_score > 0.05:
             return best_match, f"{max_score:.1%}"
         return None, 0
 

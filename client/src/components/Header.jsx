@@ -18,7 +18,7 @@ const Header = ({ onNavigate }) => {
           <nav className="nav">
             <a href="#" className="nav-link" onClick={() => onNavigate('home')}>Home</a>
             {user?.role === 'admin' && (
-              <a href="#" className="nav-link" onClick={() => onNavigate('admin')}>Admin Dashboard</a>
+              <a href="#" className="nav-link" onClick={() => onNavigate('admin')}>Admin Page</a>
             )}
 
             {user ? (
