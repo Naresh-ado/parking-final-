@@ -14,7 +14,7 @@ app.use(express.json());
 
 const VEHICLE_SIZES = {
   bike: 2,
-  car: 10,
+  car: 20,
   van: 15,
   bus: 25
 };
@@ -28,8 +28,8 @@ let parkingData = [
     place: 'Sunset Point',
     location: 'Hill Top Road, Sector 4',
     isOpen: true,
-    totalArea: 500,
-    occupiedArea: 150,
+    totalArea: 25,
+    occupiedArea: 0,
     availability: { bike: true, car: true, van: true, bus: true },
     reviews: [],
     images: []
@@ -136,6 +136,42 @@ app.post('/api/gate/entry', (req, res) => {
     res.json({
       allowed: false,
       message: `Parking Full for ${vehicleType}. Required: ${size}, Available: ${availableArea}`,
+      updatedSpot: spot
+    });
+  }
+});
+
+// 3.1 Gate Check Entry (For Python Recognition System)
+app.post('/api/gate/check-entry', (req, res) => {
+  const { spotId, vehicleType, color } = req.body;
+  const spot = parkingData.find(p => p.id === parseInt(spotId));
+
+  if (!spot) return res.status(404).json({ allowed: false, message: 'Spot not found' });
+  if (!spot.isOpen) return res.json({ allowed: false, message: 'Parking is Closed' });
+
+  const size = VEHICLE_SIZES[vehicleType.toLowerCase()];
+  if (!size) return res.status(400).json({ allowed: false, message: 'Invalid vehicle type' });
+
+  const availableArea = spot.totalArea - spot.occupiedArea;
+
+  if (availableArea >= size) {
+    // Allow entry
+    spot.occupiedArea += size;
+    updateAvailability(spot);
+
+    console.log(`[RECOGNITION] Allowed ${color} ${vehicleType} at ${spot.place}`);
+
+    res.json({
+      allowed: true,
+      message: `Welcome! Gate Opening for ${color} ${vehicleType}.`,
+      updatedSpot: spot
+    });
+  } else {
+    // Deny entry
+    console.log(`[RECOGNITION] Denied ${color} ${vehicleType} at ${spot.place} (Full)`);
+    res.json({
+      allowed: false,
+      message: `Parking Full for ${vehicleType}.`,
       updatedSpot: spot
     });
   }

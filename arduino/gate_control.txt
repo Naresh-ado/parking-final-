@@ -1,0 +1,77 @@
+#include <Servo.h>
+
+Servo gateServo;
+const int SERVO_PIN = 9;
+const int GREEN_LED = 10;
+const int RED_LED = 11;
+
+// Gate positions
+const int GATE_OPEN = 90;
+const int GATE_CLOSED = 0;
+
+String inputString = "";
+boolean stringComplete = false;
+
+void setup() {
+  Serial.begin(9600);
+  
+  gateServo.attach(SERVO_PIN);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  
+  // Initial state
+  closeGate();
+  Serial.println("Gate System Ready");
+}
+
+void loop() {
+  if (stringComplete) {
+    inputString.trim();
+    
+    if (inputString == "OPEN") {
+      openGate();
+    } else if (inputString == "CLOSE") {
+      closeGate();
+    }
+    
+    inputString = "";
+    stringComplete = false;
+  }
+}
+
+void openGate() {
+  // Slow open
+  for (int pos = GATE_CLOSED; pos <= GATE_OPEN; pos += 1) { 
+    gateServo.write(pos);              
+    delay(15);                       
+  }
+  digitalWrite(GREEN_LED, HIGH);
+  digitalWrite(RED_LED, LOW);
+  Serial.println("GATE_OPENED");
+}
+
+void closeGate() {
+  // Slow close
+  for (int pos = GATE_OPEN; pos >= GATE_CLOSED; pos -= 1) { 
+    gateServo.write(pos);              
+    delay(15);                       
+  }
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, HIGH);
+  Serial.println("GATE_CLOSED");
+}
+
+/*
+  SerialEvent occurs whenever a new data comes in the hardware serial RX. This
+  routine is run between each time loop() runs, so using delay inside loop can
+  delay response. Multiple bytes of data may be available.
+*/
+void serialEvent() {
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    inputString += inChar;
+    if (inChar == '\n') {
+      stringComplete = true;
+    }
+  }
+}
