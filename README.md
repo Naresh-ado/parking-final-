@@ -1,209 +1,157 @@
 # Smart Parking Management System
 
-A comprehensive web-based smart parking management solution with real-time parking availability tracking, admin dashboard, and simulated camera scanning features.
+A complete IoT-based smart parking solution with real-time vehicle recognition, automated gate control, and live web dashboard.
 
-## Features
+## 🚀 Features
 
-- **Real-time Parking Availability**: Dynamic table showing parking spot status
-- **Search Functionality**: Search for parking spots by location or name
-- **Camera Scanner Simulation**: Simulated vehicle recognition for live updates
-- **Admin Dashboard**: Secure admin panel for managing parking spots
-  - Add, edit, and remove parking spots
-  - Upload photos for parking locations
-  - Manage reviews and ratings
-- **Area-based Parking Logic**: Intelligent parking allocation based on vehicle size
-- **Detailed Spot View**: Click on any parking spot to view detailed information including reviews and photos
-- **Authentication**: Restricted admin access with login/signup functionality
+- **Vehicle Recognition**: OpenCV-based detection using ORB feature matching
+- **Automated Gate Control**: Arduino-controlled servo motor with LED indicators
+- **Real-time Updates**: Web dashboard polls every 5 seconds for live availability
+- **Area-based Logic**: Dynamic parking calculation based on vehicle size
+- **Admin Dashboard**: Manage parking spots (add/edit/delete)
+- **Color Detection**: HSV-based vehicle color identification
 
-## Tech Stack
-
-### Frontend
-- **React** - UI framework
-- **Vite** - Build tool and development server
-- **CSS3** - Styling with modern design patterns
-
-### Backend
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **MongoDB** - Database (if configured)
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 smart/
-├── client/                 # Frontend React application
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   │   ├── AdminDashboard.jsx
-│   │   │   ├── CameraScanner.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── Header.jsx
-│   │   │   ├── HeroSection.jsx
-│   │   │   ├── LoginModal.jsx
-│   │   │   ├── ParkingTable.jsx
-│   │   │   ├── SpotDetails.jsx
-│   │   │   └── *.css files
-│   │   ├── App.jsx        # Main application component
-│   │   └── main.jsx       # Application entry point
-│   ├── public/            # Static assets
-│   ├── package.json       # Frontend dependencies
-│   └── node_modules/      # Frontend dependencies (included)
-│
-└── server/                # Backend Node.js application
-    ├── index.js           # Server entry point
-    ├── package.json       # Backend dependencies
-    └── node_modules/      # Backend dependencies (included)
+├── client/              # React frontend
+├── server/              # Node.js backend
+├── recognition/         # Python vehicle recognition
+├── arduino/             # Arduino gate control code
+└── README.md
 ```
 
-## Installation & Setup
+## 🛠️ Setup Instructions
 
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn package manager
-
-### Quick Start
-
-Since node_modules are included in this repository, you can run the project directly:
-
-#### 1. Clone the Repository
-```bash
-git clone https://github.com/Naresh-ado/smart-parking-management.git
-cd smart-parking-management
-```
-
-#### 2. Run the Backend Server
-```bash
-cd server
-node index.js
-```
-The server will start on `http://localhost:5000` (or the configured port)
-
-#### 3. Run the Frontend (in a new terminal)
-```bash
-cd client
-npm run dev
-```
-The client will start on `http://localhost:5173` (Vite default port)
-
-### Alternative: Fresh Installation
-
-If you prefer to install dependencies fresh:
-
-#### Backend Setup
+### 1. Backend Server
 ```bash
 cd server
 npm install
 node index.js
 ```
 
-#### Frontend Setup
+### 2. Frontend
 ```bash
 cd client
 npm install
 npm run dev
 ```
 
-## Usage
-
-### For Users
-1. Open the application in your browser
-2. Browse available parking spots in the table
-3. Use the search bar to find specific locations
-4. Click on any parking spot to view detailed information
-5. Use the camera scanner feature to simulate vehicle entry
-
-### For Administrators
-1. Click on the Admin/Login button
-2. Sign in with authorized credentials (restricted to specific email)
-3. Access the admin dashboard to:
-   - Add new parking spots
-   - Edit existing spot details
-   - Remove parking spots
-   - Upload photos
-   - Manage reviews
-
-## Configuration
-
-### Backend Configuration
-Edit `server/index.js` to configure:
-- Port number
-- Database connection (if using MongoDB)
-- API endpoints
-- Authentication settings
-
-### Frontend Configuration
-Edit relevant component files in `client/src/components/` to customize:
-- UI appearance
-- API endpoint URLs
-- Feature toggles
-
-## Admin Access
-
-Admin access is restricted to specific email addresses. To configure admin emails, check the authentication logic in the backend server.
-
-## Features in Detail
-
-### Real-time Updates
-The system simulates real-time parking availability updates through the camera scanner feature, which recognizes vehicles and updates spot availability.
-
-### Area-based Allocation
-The backend implements intelligent parking allocation:
-- Calculates available parking area
-- Matches vehicle size with appropriate spots
-- Controls gate access based on availability
-- Updates status dynamically for each vehicle type
-
-### Reviews & Ratings
-Users can view reviews and ratings for parking locations to make informed decisions.
-
-## Development
-
-### Building for Production
-
-#### Frontend
+### 3. Python Recognition System
 ```bash
-cd client
-npm run build
-```
-The production build will be created in the `client/dist` directory.
-
-#### Backend
-The backend runs directly with Node.js. For production deployment, consider using:
-- PM2 for process management
-- Environment variables for configuration
-- Reverse proxy (nginx/Apache)
-
-## Troubleshooting
-
-### Port Already in Use
-If you encounter port conflicts:
-- Change the backend port in `server/index.js`
-- Change the frontend port using `--port` flag: `npm run dev -- --port 3000`
-
-### Dependencies Issues
-If you face any dependency issues:
-```bash
-# Remove node_modules and reinstall
-rm -rf node_modules
-npm install
+cd recognition
+pip install -r requirements.txt
+python vehicle_recognition.py
 ```
 
-## Contributing
+### 4. Arduino
+- Upload code from `arduino/gate_control.txt` to your Arduino
+- Connect servo to Pin 9, Green LED to Pin 10, Red LED to Pin 11
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## ⚙️ Configuration
 
-## License
+### Parking Spot (server/index.js)
+- **Sunset Point**: totalArea = 25
+- **Car Size**: 20 square units
+- **Result**: After 1 car → Full (Red indicator)
 
-This project is open source and available under the MIT License.
+### Detection Threshold (recognition/vehicle_recognition.py)
+- **Match Threshold**: 5% (0.05)
+- **Debug Print**: Shows scores > 3%
 
-## Contact
+### Camera (recognition/config.py)
+- **DroidCam**: `http://172.22.238.171:4747/video`
+- **Laptop Webcam**: Change to `CAM_URL = 0`
 
-For questions or support, please open an issue on GitHub.
+### Arduino (recognition/config.py)
+- **Serial Port**: COM11
+- **Baud Rate**: 9600
+
+## 🎯 How It Works
+
+1. Camera detects car → Match score > 5%
+2. Python sends request to backend API
+3. Backend checks: `availableArea >= carSize?`
+4. If YES: Gate opens, area updates, website turns RED
+5. Arduino: Slow servo movement (7 seconds open)
+6. Website: Auto-updates every 5 seconds
+
+## 🔑 Admin Access
+
+- **Email**: `nareshs@student.tce.edu`
+- **Features**: Add/Edit/Delete parking spots
+
+## 📊 System Flow
+
+```
+Camera → Python (ORB) → Backend API → Arduino (Servo/LED)
+                              ↓
+                         Website (React)
+                         Polls every 5s
+```
+
+## 🌐 GitHub Repository
+
+**URL**: https://github.com/Naresh-ado/parking-final-.git
+
+## 📝 Key Files
+
+- `server/index.js` (Line 159): Area calculation logic
+- `recognition/vehicle_recognition.py`: Main detection script
+- `arduino/gate_control.txt`: Servo control code
+- `client/src/components/ParkingTable.jsx`: Real-time polling
+
+## 🧪 Testing
+
+1. Start all services (backend, frontend, recognition)
+2. Open http://localhost:5173
+3. Show car image to camera
+4. Watch gate open and website turn RED
+
+## 📦 Dependencies
+
+### Python
+- opencv-python
+- numpy
+- requests
+- pyserial
+
+### Node.js
+- express
+- cors
+- dotenv
+
+### React
+- vite
+- react
+
+## 🎨 Features Implemented
+
+✅ Vehicle detection with ORB feature matching
+✅ Arduino gate control (slow movement)
+✅ Real-time web updates (5s polling)
+✅ Area-based parking logic
+✅ Admin dashboard with authentication
+✅ Color detection (HSV)
+✅ LED indicators (Green/Red)
+✅ Serial communication (Python ↔ Arduino)
+
+## 🔧 Troubleshooting
+
+**Camera not connecting?**
+- Check DroidCam IP and WiFi connection
+- Or switch to laptop webcam: `CAM_URL = 0`
+
+**Arduino not responding?**
+- Verify COM port in config.py
+- Check if code is uploaded
+
+**Website not updating?**
+- Ensure backend is running on port 5000
+- Check browser console for errors
 
 ---
 
-**Note**: This project includes node_modules for quick setup. For production deployment, it's recommended to use a fresh `npm install` and configure appropriate .gitignore rules.
+**Developed by**: Naresh
+**Last Updated**: December 2, 2025
